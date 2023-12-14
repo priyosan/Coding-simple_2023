@@ -1,0 +1,54 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  IMAGE_NAME: htmltesting
+
+jobs:
+          
+  ip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get runner IP address
+        run: |
+          ip=$(curl -s https://api.ipify.org)
+          for i in {1..10}; do
+            echo "The IP address of the runner is: $ip"
+          done      
+          
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        env:
+          DOCKER_BUILDKIT: 1
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:latest
+          
+  compose:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        run: git clone https://github.com/priyosan/Coding-simple_2023.git
+        working-directory: ${{ github.workspace }}
+      
+      - name: Start services
+        run: |
+          cd htmltesting
+          docker-compose up -d

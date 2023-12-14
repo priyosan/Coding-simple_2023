@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+ web:
+  container_name: coding-html
+  build: .   #add image
+  expose:
+   - 8000
+  ports:
+   - "8000:80"
+  restart: always 
+  volumes:
+  - ./indexhtml/src:/usr/share/nginx/indexhtml/src
+  links:
+  - php
+ php:
+  image: php:7-fpm

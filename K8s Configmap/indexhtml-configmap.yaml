@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: index-html-configmap
+  namespace: default
+data:
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <title>Welcome ...</title>
+    <style>
+      h1 {
+        color: green;
+        text-align: center;
+        font-size: 64px;
+        margin-top: 50px;
+      }
+      p {
+        text-align: center;
+        font-size: 36px;
+      }
+    </style>
+    </head>
+    <body>
+    <h1><Welcome>
+    Anonymous ...</h1>
+    <p>Thank you for visiting our local website.</p>
+    </body>
+    </html>
